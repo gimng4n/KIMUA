@@ -17,12 +17,24 @@ void setup() {
 
 void loop() {
   buttonState = digitalRead(buttonPin);
-// for loop for ax
-for (int i = 0; i <= 4; i++) { //action
-myservo.write(0);
-delay(500)
-myservo.write(180);
-delay(500)
+  if (buttonState != previousButtonState) {
+    if (buttonState == HIGH) {
+      Serial.println("button pressed");
+       // for loop for ax
+      for (int i = 0; i <= 3; i++) { //action
+      myservo.write(70);
+      delay(500);
+      myservo.write(120);
+      delay(500);
+      }
+    // digitalWrite(redPin, HIGH);
+    } else {
+      Serial.println("button released");
+      // digitalWrite(redPin, LOW);
+    myservo.write(0);
+    }
+  }
+  previousButtonState = buttonState;
 }
 
   if (buttonState != previousButtonState) {
