@@ -1,40 +1,61 @@
-// const int redPin = 4;
-const int buttonPin = 2;
-int buttonState = 0;
-int previousButtonState = 0;
+const int buttonOne = 10;
+const int buttonTwo = 8;
 
- #include <Servo.h>
- Servo myservo;
+const int redPin = 12;
+const int redPin2 = 13;
+
+int buttonState1 = 0;
+int buttonState2 = 0;
+int previousButtonState = 0;
+int previousButtonState2 = 0;
+
+#include <Servo.h>
+Servo servoOne;
+Servo servoTwo;
 
 void setup() {
-   myservo.attach(4);
-  pinMode(buttonPin, INPUT);
-  // pinMode(redPin, OUTPUT);
-  Serial.begin(9600);
+  servoOne.attach(11);
+  servoTwo.attach(9);
+  servoOne.write(105);  // 10 90
+  servoTwo.write(56);   // go down
 
-  // digitalWrite(redPin, LOW);
+  pinMode(buttonOne, INPUT);
+  pinMode(buttonTwo, INPUT);
+
+  // LEDs setup + restart
+  pinMode(redPin, OUTPUT);
+  pinMode(redPin2, OUTPUT);
+  digitalWrite(redPin2, LOW);
+  digitalWrite(redPin, LOW);
+
+  Serial.begin(9600);
 }
 
 void loop() {
-  buttonState = digitalRead(buttonPin);
-// for loop for ax
-for (int i = 0; i <= 4; i++) { //action
-myservo.write(0);
-delay(500)
-myservo.write(180);
-delay(500)
-}
+  buttonState1 = digitalRead(buttonOne);
+  buttonState2 = digitalRead(buttonTwo);
 
-  if (buttonState != previousButtonState) {
-    if (buttonState == HIGH) {
+  //  First Interaction (1 Servo + 2 LED)
+  if (buttonState1 != previousButtonState) {
+    if (buttonState1 == HIGH) {
+      digitalWrite(redPin, HIGH);
+      digitalWrite(redPin2, HIGH);
+      servoOne.write(30);
       Serial.println("button pressed");
-       myservo.write(90);
-    // digitalWrite(redPin, HIGH);
     } else {
       Serial.println("button released");
-      // digitalWrite(redPin, LOW);
-    myservo.write(0);
     }
   }
-  previousButtonState = buttonState;
+  previousButtonState = buttonState1;
+
+  // Third Interaction (1 Servo Bridge)
+  if (buttonState2 != previousButtonState2) {
+    if (buttonState2 == HIGH) {
+      servoTwo.write(0);
+      Serial.println("button pressed");
+    } else {
+      Serial.println("button released");
+    }
+  }
+  previousButtonState2 = buttonState2;
 }
